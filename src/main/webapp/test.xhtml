@@ -1,18 +1,64 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
 
-    <h:head>
-        <title>PrimeFaces Test</title>
-    </h:head>
-    <h:body>
+<h:head>
+	<title>PrimeFaces Test</title>
+</h:head>
+<h:body>
 
-        <h1>#{testView.testString}</h1>
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		<p:commandButton value="Yes" type="button"
+			styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+		<p:commandButton value="No" type="button"
+			styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+	</p:confirmDialog>
 
-        <h1>#{testViewCdi.testString}</h1>
+	<h1>#{testView.testString}</h1>
 
-    </h:body>
+	<h:form>
+		<p:messages id="messages" showDetail="true" closable="true">
+			<p:autoUpdate />
+		</p:messages>
+
+		<p:panel header="Test panel" id="documentationPanel">
+			<p:dataTable id="tableOutgoing" var="row"
+				value="#{testView.outgoingData}" rowIndexVar="idx" paginator="true"
+				rows="5" rowsPerPageTemplate="5,10,20,50"
+				emptyMessage="#{msg['tableEmpty']}"
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+				<p:column headerText="confirm required" filterable="false">
+					<h:outputText value="#{row.confirmRequired}" />
+
+				</p:column>
+
+				<p:column headerText="actions" filterable="false">
+
+					<p:commandButton id="checkoutBtn"
+						action="#{testView.checkAndPrepareCheckout()}"
+						value="Do it!" styleClass="BB"
+						icon="fa fa-reply" process="@this" update="@this tableOutgoing">
+						<f:setPropertyActionListener target="#{testView.selectedRow}"
+							value="#{row}" />
+						<p:confirm disabled="#{!row.confirmRequired}" header="Warning"
+							message="Confirm this" />
+					</p:commandButton>
+
+				</p:column>
+
+
+
+			</p:dataTable>
+
+
+
+		</p:panel>
+
+	</h:form>
+
+</h:body>
 </html>
